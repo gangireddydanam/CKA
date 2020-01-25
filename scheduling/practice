@@ -1,0 +1,70 @@
+
+master $ cat nginx.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+spec:
+  containers:
+  -  image: nginx
+     name: nginxmaster 
+
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: replicaset-1
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        tier: frontend
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+
+
+
+aster $ history
+    1  while [ ! -f /tmp/wait-script.sh ]; do   sleep .2; done
+    2  chmod 755 /tmp/wait-script.sh; /tmp/wait-script.sh
+    3  kubectl  get po --selector env=dev
+    4  kubectl  get po --selector bu=finance
+    5  kubectl  get all --selector env=prod
+    6  kubectl get all --selector env=prod,bu=finance,tier=frontend
+    7  vi replicaset-definition-1.yaml
+    8  cat replicaset-definition-1.yaml
+    9  kubectl apply -f replicaset-definition-1.yaml
+   10  history
+ 
+ 
+ 
+ Tainds and Tolerations
+ 
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     
