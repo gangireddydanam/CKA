@@ -43,8 +43,193 @@ aster $ history
  
  
  
- Tainds and Tolerations
+ Taint and Tolerations
  
+ Create the taint
+ 
+ kubectl taint nodes node01 spray=mortein:NoSchedule
+ 
+master $ more /var/answers/mosquito.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mosquito
+spec:
+  containers:
+  - image: nginx
+    name: mosquito
+master $
+
+
+master $ cat /var/answers/bee.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: bee
+spec:
+  containers:
+  - image: nginx
+    name: bee
+  tolerations:
+  - key: spray
+    value: mortein
+    effect: NoSchedule
+    operator: Equal
+master $
+
+
+ster $ history
+    1  while [ ! -f /tmp/wait-script.sh ]; do   sleep .2; done
+    2  chmod 755 /tmp/wait-script.sh; /tmp/wait-script.sh
+    3  alias k=kubectl
+    4  alias kgp='kubectl get po'
+    5  k get nodes
+    6  k describe node node01
+    7  kubectl taint nodes node01 spray=mortein:NoSchedule
+    8  more /var/answers/mosquito.yaml
+    9  kubectl apply -f /var/answers/mosquito.yaml
+   10  k get po
+   11  k describe po mosquito
+   12  cat /var/answers/bee.yaml
+   13  k apply -f /var/answers/bee.yaml
+   14  k describe node node01
+   15  k describe node master01
+   16  k describe node master
+   17  kubectl taint nodes master node-role.kubernetes.io/master:NoSchedule
+   18  'kubectl taint nodes master node-role.kubernetes.io/master:NoSchedule-'
+   19  kubectl taint nodes $(hostname) node-role.kubernetes.io/master:NoSchedule-
+   20  k describe node master01
+   21  k describe node master
+   22  k get po
+   23  k get po -o wide
+   24  history
+master $
+
+
+NodeAffinity 
+
+types
+
+aster $ cat  /var/answers/blue-deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: blue
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      run: nginx
+  template:
+    metadata:
+      labels:
+        run: nginx
+    spec:
+      containers:
+      - image: nginx
+        imagePullPolicy: Always
+        name: nginx
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: color
+                operator: In
+                values:
+                - blue
+master $
+
+
+master $ cat  /var/answers/red-deployment.yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: red
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      run: nginx
+  template:
+    metadata:
+      labels:
+        run: nginx
+    spec:
+      containers:
+      - image: nginx
+        imagePullPolicy: Always
+        name: nginx
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: node-role.kubernetes.io/master
+                operator: Exists
+master $
+
+
+ quick note on editing PODs and Deployments
+Edit a POD
+Remember, you CANNOT edit specifications of an existing POD other than the below.
+
+spec.containers[*].image
+
+spec.initContainers[*].image
+
+spec.activeDeadlineSeconds
+
+spec.tolerations
+
+For example you cannot edit the environment variables, service accounts, resource limits (all of which we will discuss later) of a running pod. But if you really want to, you have 2 options:
+
+1. Run the kubectl edit pod <pod name> command.  This will open the pod specification in an editor (vi editor). Then edit the required properties. When you try to save it, you will be denied. This is because you are attempting to edit a field on the pod that is not editable.
+
+
+
+A copy of the file with your changes is saved in a temporary location as shown above.
+
+You can then delete the existing pod by running the command:
+
+kubectl delete pod webapp
+
+
+
+Then create a new pod with your changes using the temporary file
+
+kubectl create -f /tmp/kubectl-edit-ccvrq.yaml
+
+
+
+2. The second option is to extract the pod definition in YAML format to a file using the command
+
+kubectl get pod webapp -o yaml > my-new-pod.yaml
+
+Then make the changes to the exported file using an editor (vi editor). Save the changes
+
+vi my-new-pod.yaml
+
+Then delete the existing pod
+
+kubectl delete pod webapp
+
+Then create a new pod with the edited file
+
+kubectl create -f my-new-pod.yaml
+
+
+
+Edit Deployments
+With Deployments you can easily edit any field/property of the POD template. Since the pod template is a child of the deployment specification,  with every change the deployment will automatically delete and create a new pod with the new changes. So if you are asked to edit a property of a POD part of a deployment you may do that simply by running the command
+
+kubectl edit deployment my-deployment
+
+
+
+
+
+
  
  
 
