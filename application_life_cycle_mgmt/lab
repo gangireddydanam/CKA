@@ -1,1 +1,95 @@
 
+kubectl rollout status
+kubectl rollout history
+
+Recreate and Rooling update
+
+Upgrade
+
+kubectl rollout undo deployment/v2
+
+kubectl set image deloyment/v2
+
+Configuring applications comprises of understanding the following concepts:
+
+Configuring Command and Arguments on applications
+
+Configuring Environment Variables
+
+Configuring Secrets
+
+We will see these next
+
+
+containers:
+  -name : 
+   image :
+   entrypoint: ["sleep"]
+   args: ["10"]
+   
+ 
+ apiVersion: v1
+ kind: Pod
+ metadata:
+   -name: 
+ spec:
+  containers:
+    - name: 
+      image: 
+      ports:
+       - containerport: 
+      env:
+        - name: a
+          value: pink
+          
+        - name: color
+          valueFrom:
+           configMapKeyRef:
+         - name: password
+           valueFrom:
+           secretKeyRef:
+           
+  
+  
+  Create the configmap
+  imperative
+  declarative
+  
+  kubectl create configmap --from-literal=color=value
+  
+  kubectl create configmap --from-literal-file=file
+  
+  apiVersion:
+  kind:
+  metada:
+  data:
+   key: value
+   
+   you can inject as value form file
+   or as the volume mount
+   
+   
+   
+   Secret
+   
+   kubectl create secrete generic --from-literal=key=value
+   
+   echo -n "root" | base64
+   
+      
+   echo -n "root" | base64 --decode
+   
+   
+   with the volume you have to create more files.
+   
+   
+   
+   
+   
+  
+  
+          
+      
+     
+  
+ 
