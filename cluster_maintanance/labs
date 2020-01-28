@@ -1,1 +1,5 @@
 
+Pod eviction timeout = 5 mins
+kubectl drain node----graceful
+kubectl uncordon node ---adding to the cluster
+kubectl cordon node--new pods will not come..existing pods will not go
