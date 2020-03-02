@@ -27,3 +27,5 @@ Replication set
 apps/v1
 
 kubectl scale replicas=5 name
+
+service.ns.svc.cluster.local
