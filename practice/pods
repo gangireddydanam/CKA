@@ -1,0 +1,29 @@
+How many PODs exist on the system?
+in the current(default) namespace
+
+Create a new pod with the NGINX image
+
+kubectl run nginx --image=nginx --generator=run-pod/v1
+kubectl run nginx --image=nginx --generator=run-pod/v1 --env="a"=10 --env="b"=20
+
+alias k=kubectl
+
+k run nignx --image=nginx --generator=run-pod/v1
+kubectl run hazelcast --image=hazelcast --env="DNS_DOMAIN=cluster" --env="POD_NAMESPACE=default"
+
+
+kubectl run 
+set
+rollout
+
+kubectl run nginx --image=nginx --env=a=10 --port=80
+kubectl run nginx --image=nginx --env=a=10 --port=80 --labels="app=test,env=dev"
+kubectl run nginx --imgae=nginx --replicas=10 
+kubectl run nginx --image=nginx --dry-run
+kubectl run nginx --image=nginx --replicas=10 --restart=Never
+
+
+Replication set
+apps/v1
+
+kubectl scale replicas=5 name
